@@ -1,0 +1,98 @@
+@use '../../variables' as *;
+
+.dashboard-page {
+  h2 {
+    color: $text-primary;
+  }
+}
+
+.dashboard-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $text-primary;
+  animation: fade-in-up 0.5s $ease-out-expo both;
+}
+
+.dashboard-section {
+  animation: fade-in-up 0.5s $ease-out-expo both;
+}
+
+.start-here-section {
+  background: $accent-muted;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  box-shadow: $shadow-sm;
+  transition: box-shadow 0.4s $ease-out-expo, transform 0.35s $ease-out-expo;
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+  }
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem 1.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.start-here-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .meta-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $text-muted;
+  }
+
+  .meta-value {
+    font-weight: 500;
+    color: $text-primary;
+  }
+}
+
+.progress-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .progress-item {
+    .progress-label {
+      font-size: 0.875rem;
+      color: $text-secondary;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+  }
+}
+
+.dashboard-page .badge {
+  transition: transform 0.25s $ease-spring;
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.dashboard-page a.stretched-link {
+  transition: gap 0.25s ease, opacity 0.25s ease;
+  i {
+    transition: transform 0.25s $ease-out-expo;
+  }
+  &:hover i {
+    transform: translateX(4px);
+  }
+}
+

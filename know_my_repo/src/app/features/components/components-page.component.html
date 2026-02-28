@@ -1,0 +1,63 @@
+<div class="components-page">
+  <h1 class="components-title">Components</h1>
+
+  @if (!hasData()) {
+    <app-empty-state
+      icon="fa-cubes"
+      title="Components view"
+      message="Analyze a codebase to explore its components and modules."
+      actionLabel="Upload codebase"
+      actionRoute="/upload"
+    />
+  } @else {
+    <section class="mb-4" [@fadeInUp]>
+      <app-animated-card padding="lg" [hoverable]="true">
+        <h2 class="section-heading mb-3">
+          <i class="fas fa-cubes text-accent"></i>
+          Core components
+        </h2>
+        @if (coreComponents().length > 0) {
+          <ul class="list-unstyled mb-0">
+            @for (c of coreComponents(); track c) {
+              <li class="component-item py-2 border-bottom border-secondary border-opacity-25">{{ c }}</li>
+            }
+          </ul>
+        } @else {
+          <p class="text-secondary small mb-0">No components detected.</p>
+        }
+      </app-animated-card>
+    </section>
+
+    @if (routeTraces().length > 0) {
+      <section class="route-traces-section" [@fadeInUp]>
+        <app-animated-card padding="lg" [hoverable]="true">
+          <h2 class="section-heading mb-3">
+            <i class="fas fa-route text-accent"></i>
+            Interactive trace
+          </h2>
+          <p class="text-secondary small mb-3">Click a route to see controller, service, and model.</p>
+          <ul class="trace-route-list list-unstyled mb-0">
+            @for (trace of routeTraces(); track trace.route) {
+              <li>
+                <button
+                  type="button"
+                  class="trace-route-btn"
+                  (click)="openTrace(trace)"
+                >
+                  <i class="fas fa-chevron-right me-2"></i>
+                  {{ trace.route }}
+                </button>
+              </li>
+            }
+          </ul>
+        </app-animated-card>
+      </section>
+    }
+
+    <app-trace-panel
+      [trace]="selectedTrace()"
+      [visible]="tracePanelVisible()"
+      (closed)="closeTracePanel()"
+    />
+  }
+</div>

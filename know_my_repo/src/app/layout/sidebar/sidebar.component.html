@@ -1,0 +1,38 @@
+<aside
+  class="app-sidebar"
+  [class.collapsed]="collapsed()"
+  [class.sidebar-visible]="visible()"
+  [class.d-lg-flex]="true"
+>
+  <nav class="nav flex-column nav-pills gap-1 p-3">
+    @for (item of navItems; track item.route) {
+      <a
+        class="nav-link rounded-3 d-flex align-items-center gap-3 py-2 px-3"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+        (click)="onLinkClick()"
+      >
+        <span class="sidebar-icon-wrap">
+          <i class="fas {{ item.icon }} fa-fw sidebar-icon"></i>
+        </span>
+        <span class="sidebar-label">{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+  <button
+    type="button"
+    class="sidebar-collapse-btn"
+    aria-label="Collapse sidebar"
+    (click)="onCollapseClick()"
+  >
+    <i class="fas fa-chevron-left sidebar-chevron" [class.rotated]="collapsed()"></i>
+  </button>
+</aside>
+@if (visible()) {
+  <div
+    class="sidebar-overlay d-lg-none"
+    (click)="onLinkClick()"
+    aria-hidden="true"
+  ></div>
+}

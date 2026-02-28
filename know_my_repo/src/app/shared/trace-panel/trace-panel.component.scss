@@ -1,0 +1,135 @@
+@use '../../variables' as *;
+
+.trace-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1040;
+  animation: trace-fade-in 0.25s ease-out;
+}
+
+@keyframes trace-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.trace-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 420px;
+  height: 100vh;
+  background: var(--app-glass-bg);
+  backdrop-filter: blur(12px);
+  border-left: 1px solid var(--app-glass-border);
+  z-index: 1050;
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.2);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-out;
+
+  &--open {
+    transform: translateX(0);
+  }
+}
+
+.trace-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--app-glass-border);
+}
+
+.trace-panel-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0;
+}
+
+.trace-panel-close {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  background: transparent;
+  color: $text-secondary;
+  border-radius: $radius-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background: $accent-muted;
+    color: $accent;
+  }
+}
+
+.trace-panel-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.trace-route {
+  margin-bottom: 1.25rem;
+}
+
+.trace-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $text-muted;
+  margin-bottom: 0.25rem;
+}
+
+.trace-value {
+  font-size: 0.95rem;
+  color: $text-primary;
+}
+
+.trace-route code {
+  background: $bg-tertiary;
+  padding: 0.25rem 0.5rem;
+  border-radius: $radius-sm;
+  font-family: $font-mono;
+  font-size: 0.9rem;
+}
+
+.trace-block {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem 0;
+  border-bottom: 1px solid $border-light;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.trace-block-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: $radius-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+
+  &--controller {
+    background: rgba(234, 179, 8, 0.2);
+    color: $warning;
+  }
+  &--service {
+    background: rgba(59, 130, 246, 0.2);
+    color: $accent;
+  }
+  &--model {
+    background: rgba(34, 197, 94, 0.2);
+    color: $success;
+  }
+}

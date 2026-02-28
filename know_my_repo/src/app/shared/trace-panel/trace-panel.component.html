@@ -1,0 +1,55 @@
+@if (visible()) {
+  <div class="trace-backdrop" (click)="onBackdropClick()" role="button" tabindex="-1" aria-label="Close panel"></div>
+  <aside class="trace-panel" [class.trace-panel--open]="visible()">
+    <div class="trace-panel-header">
+      <h2 class="trace-panel-title">
+        <i class="fas fa-route me-2"></i>
+        Route trace
+      </h2>
+      <button type="button" class="trace-panel-close" aria-label="Close" (click)="close()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    @if (trace(); as t) {
+      <div class="trace-panel-body">
+        <div class="trace-route">
+          <span class="trace-label">Route</span>
+          <code class="trace-value">{{ t.route }}</code>
+        </div>
+        @if (t.controller) {
+          <div class="trace-block">
+            <span class="trace-block-icon trace-block-icon--controller">
+              <i class="fas fa-code"></i>
+            </span>
+            <div>
+              <span class="trace-label">Controller</span>
+              <p class="trace-value mb-0">{{ t.controller }}</p>
+            </div>
+          </div>
+        }
+        @if (t.service) {
+          <div class="trace-block">
+            <span class="trace-block-icon trace-block-icon--service">
+              <i class="fas fa-cog"></i>
+            </span>
+            <div>
+              <span class="trace-label">Service</span>
+              <p class="trace-value mb-0">{{ t.service }}</p>
+            </div>
+          </div>
+        }
+        @if (t.model) {
+          <div class="trace-block">
+            <span class="trace-block-icon trace-block-icon--model">
+              <i class="fas fa-database"></i>
+            </span>
+            <div>
+              <span class="trace-label">Model</span>
+              <p class="trace-value mb-0">{{ t.model }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </aside>
+}

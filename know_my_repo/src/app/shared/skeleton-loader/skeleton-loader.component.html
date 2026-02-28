@@ -1,0 +1,37 @@
+<div class="skeleton-loader" [attr.data-variant]="variant()">
+  @switch (variant()) {
+    @case ('card') {
+      <div class="skeleton-card">
+        <app-skeleton height="1.5rem" width="60%" class="mb-3" />
+        <app-skeleton height="1rem" class="mb-2" />
+        <app-skeleton height="1rem" width="90%" class="mb-2" />
+        <app-skeleton height="1rem" width="70%" />
+      </div>
+    }
+    @case ('list') {
+      <div class="skeleton-list">
+        @for (i of [1,2,3,4,5]; track i) {
+          <app-skeleton height="2.5rem" class="skeleton-list-item" />
+        }
+      </div>
+    }
+    @case ('dashboard') {
+      <div class="skeleton-dashboard">
+        <app-skeleton height="2rem" width="40%" class="mb-4" />
+        <div class="skeleton-dashboard-grid">
+          <app-skeleton height="8rem" borderRadius="12px" />
+          <app-skeleton height="8rem" borderRadius="12px" />
+          <app-skeleton height="8rem" borderRadius="12px" />
+        </div>
+        <app-skeleton height="4rem" width="100%" class="mt-4" borderRadius="12px" />
+      </div>
+    }
+    @default {
+      <div class="skeleton-card">
+        <app-skeleton height="1.5rem" width="60%" class="mb-3" />
+        <app-skeleton height="1rem" class="mb-2" />
+        <app-skeleton height="1rem" width="90%" />
+      </div>
+    }
+  }
+</div>

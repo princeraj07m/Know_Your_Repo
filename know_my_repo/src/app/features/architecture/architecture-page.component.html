@@ -1,0 +1,126 @@
+<div class="architecture-page">
+  <h2 class="mb-4">Architecture</h2>
+
+  @if (!hasData()) {
+    <app-empty-state
+      icon="fa-sitemap"
+      title="Architecture view"
+      message="Analyze a codebase to see its architecture and dependency graph."
+      actionLabel="Upload codebase"
+      actionRoute="/upload"
+    />
+  } @else {
+    <!-- MVC-style diagram / Layered breakdown -->
+    <section class="layers-diagram mb-4" [@fadeIn]>
+      <h5 class="mb-3 d-flex align-items-center gap-2">
+        <i class="fas fa-layer-group text-accent"></i>
+        Layered breakdown
+      </h5>
+      <div class="layers-stack">
+        @for (layer of layers(); track trackByLayer($index, layer); let i = $index) {
+          <div
+            class="layer-block"
+            [class.layer-block--clickable]="layer.components?.length"
+            (click)="layer.components?.length && toggle('layer-' + i)"
+            [@fadeIn]
+          >
+            <div class="layer-header d-flex align-items-center justify-content-between">
+              <span class="layer-name">{{ layer.name }}</span>
+              @if (layer.components?.length) {
+                <i class="fas fa-chevron-down layer-chevron" [class.rotated]="isExpanded('layer-' + i)"></i>
+              }
+            </div>
+            @if (layer.description) {
+              <p class="layer-desc small text-secondary mb-0 mt-1">{{ layer.description }}</p>
+            }
+            @if (isExpanded('layer-' + i) && layer.components?.length) {
+              <div class="layer-components mt-2" [@expandAccordion]>
+                <ul class="list-unstyled mb-0 small">
+                  @for (comp of layer.components; track comp) {
+                    <li class="py-1">{{ comp }}</li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+        }
+        @if (layers().length === 0) {
+          <app-animated-card padding="md" [hoverable]="false">
+            <p class="text-secondary small mb-0">No layers detected. Run analysis to see architecture.</p>
+          </app-animated-card>
+        }
+      </div>
+    </section>
+
+    <!-- Core components accordion -->
+    @if (coreComponents().length > 0) {
+      <section class="core-components-section mb-4" [@fadeIn]>
+        <h5 class="mb-3 d-flex align-items-center gap-2">
+          <i class="fas fa-cubes text-accent"></i>
+          Core components
+        </h5>
+        <div class="accordion-block">
+          <button
+            type="button"
+            class="accordion-trigger w-100 d-flex align-items-center justify-content-between p-3 rounded-3"
+            (click)="toggle('core')"
+          >
+            <span>Components ({{ coreComponents().length }})</span>
+            <i class="fas fa-chevron-down" [class.rotated]="isExpanded('core')"></i>
+          </button>
+          @if (isExpanded('core')) {
+            <div class="accordion-content p-3 pt-0" [@expandAccordion]>
+              <ul class="list-unstyled mb-0">
+                @for (c of coreComponents(); track c) {
+                  <li class="py-2 border-bottom border-secondary border-opacity-25 component-item">{{ c }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Architecture diagram (project-type aware) -->
+    <section class="mvc-visual mt-4" [@fadeIn]>
+      <h5 class="mb-3">Architecture Overview</h5>
+      <div class="mvc-blocks">
+        @if (layers().some(l => l.name === 'Controllers')) {
+          <div class="mvc-block mvc-block--controller">
+            <i class="fas fa-code"></i>
+            <span>Controller</span>
+          </div>
+        }
+        @if (layers().some(l => l.name === 'Services')) {
+          <div class="mvc-block mvc-block--service">
+            <i class="fas fa-cogs"></i>
+            <span>Service</span>
+          </div>
+        }
+        @if (layers().some(l => l.name === 'Models')) {
+          <div class="mvc-block mvc-block--model">
+            <i class="fas fa-database"></i>
+            <span>Model</span>
+          </div>
+        }
+        @if (layers().some(l => l.name === 'UI Components')) {
+          <div class="mvc-block mvc-block--view">
+            <i class="fas fa-desktop"></i>
+            <span>View</span>
+          </div>
+        }
+        @if (layers().some(l => l.name === 'ML Pipeline')) {
+          <div class="mvc-block mvc-block--ml">
+            <i class="fas fa-brain"></i>
+            <span>ML</span>
+          </div>
+        }
+        @if (layers().length === 0) {
+          <div class="mvc-block mvc-block--model"><i class="fas fa-database"></i><span>Model</span></div>
+          <div class="mvc-block mvc-block--view"><i class="fas fa-desktop"></i><span>View</span></div>
+          <div class="mvc-block mvc-block--controller"><i class="fas fa-code"></i><span>Controller</span></div>
+        }
+      </div>
+    </section>
+  }
+</div>

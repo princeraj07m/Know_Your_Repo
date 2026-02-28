@@ -1,0 +1,37 @@
+@use '../../variables' as *;
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+
+  &[data-size='sm'] .spinner-ring {
+    width: 24px;
+    height: 24px;
+    border-width: 2px;
+  }
+
+  &[data-size='lg'] .spinner-ring {
+    width: 52px;
+    height: 52px;
+    border-width: 4px;
+  }
+}
+
+.spinner-ring {
+  width: 40px;
+  height: 40px;
+  border: 3px solid $border-color;
+  border-top-color: $accent;
+  border-right-color: rgba(59, 130, 246, 0.4);
+  border-radius: 50%;
+  animation: spin 0.9s $ease-in-out-smooth infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

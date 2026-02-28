@@ -1,0 +1,52 @@
+<div class="workflow-page">
+  <h1 class="workflow-title">Workflow</h1>
+
+  @if (!hasData()) {
+    <app-empty-state
+      icon="fa-diagram-project"
+      title="Workflow view"
+      message="Analyze a codebase to see workflows and data flow."
+      actionLabel="Upload codebase"
+      actionRoute="/upload"
+    />
+  } @else {
+    <section class="workflow-list mb-4" [@fadeInUp]>
+      <app-animated-card padding="md" [hoverable]="true">
+        <h2 class="section-heading mb-3">
+          <i class="fas fa-list text-accent"></i>
+          Workflows
+        </h2>
+        @if (workflows().length > 0) {
+          <ul class="list-unstyled mb-0">
+            @for (w of workflows(); track w.name) {
+              <li class="workflow-item py-2 border-bottom border-secondary border-opacity-25">
+                <strong>{{ w.name }}</strong>
+                @if (w.description) {
+                  <p class="text-secondary small mb-0 mt-1">{{ w.description }}</p>
+                }
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="text-secondary small mb-0">No workflows detected.</p>
+        }
+      </app-animated-card>
+    </section>
+
+    <section class="workflow-diagram-section" [@diagramEnter]>
+      <app-animated-card padding="lg" [hoverable]="false">
+        <h2 class="section-heading mb-3">
+          <i class="fas fa-diagram-project text-accent"></i>
+          Execution flow
+        </h2>
+        @if (executionFlowPlainText(); as plainText) {
+          <pre class="execution-flow-text">{{ plainText }}</pre>
+        } @else {
+          <div class="diagram-card">
+            <app-mermaid-diagram [definition]="mermaidDefinition()" />
+          </div>
+        }
+      </app-animated-card>
+    </section>
+  }
+</div>

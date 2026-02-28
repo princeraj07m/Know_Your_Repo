@@ -1,0 +1,114 @@
+<div class="insights-page">
+  <h1 class="insights-title">Insights</h1>
+
+  @if (!hasData()) {
+    <app-empty-state
+      icon="fa-lightbulb"
+      title="Insights"
+      message="Analyze a codebase to get AI-powered insights and recommendations."
+      actionLabel="Upload codebase"
+      actionRoute="/upload"
+    />
+  } @else {
+    @if (circularDependencies().length > 0) {
+      <section class="insights-section circular-alert-section mb-4" [@fadeInUp]>
+        <div class="circular-alert-card">
+          <div class="circular-alert-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="circular-alert-body">
+            <h2 class="circular-alert-title">Circular dependency detected</h2>
+            <p class="circular-alert-desc mb-0">The following cycles were found. Consider refactoring to break the cycle.</p>
+            <ul class="circular-alert-list mt-2 mb-0">
+              @for (dep of circularDependencies(); track dep) {
+                <li>{{ dep }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+      </section>
+    }
+
+    @if (risks().length > 0) {
+      <section class="insights-section risk-badges-section mb-4" [@fadeInUp]>
+        <h2 class="section-heading mb-3">
+          <i class="fas fa-triangle-exclamation text-accent"></i>
+          Risk indicators
+        </h2>
+        <div class="risk-badges">
+          @for (r of risks(); track r.title) {
+            <div class="risk-badge risk-badge--{{ r.severity ?? 'low' }}">
+              <span class="risk-badge-label">{{ r.severity ?? 'low' }}</span>
+              <span class="risk-badge-title">{{ r.title }}</span>
+              @if (r.description) {
+                <p class="risk-badge-desc small mb-0">{{ r.description }}</p>
+              }
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    @if (topFiles().length > 0) {
+      <section class="insights-section heatmap-section mb-4" [@fadeInUp]>
+        <app-animated-card padding="lg" [hoverable]="true">
+          <h2 class="section-heading mb-3">
+            <i class="fas fa-fire text-accent"></i>
+            Most important files
+          </h2>
+          <p class="text-secondary small mb-3">Files ranked by relevance to the codebase.</p>
+          <ul class="heatmap-list list-unstyled mb-0">
+            @for (f of topFiles(); track f.path; let i = $index) {
+              <li class="heatmap-item" [class.heatmap-item--top3]="i < 3">
+                <div class="heatmap-item-header">
+                  <span class="heatmap-item-path">{{ f.label ?? f.path }}</span>
+                  <span class="heatmap-item-pct">{{ f.importance }}%</span>
+                </div>
+                <div class="progress heatmap-progress">
+                  <div
+                    class="progress-bar"
+                    [class.progress-bar--high]="f.importance >= 70"
+                    [class.progress-bar--mid]="f.importance >= 40 && f.importance < 70"
+                    [class.progress-bar--low]="f.importance < 40"
+                    [style.width.%]="f.importance"
+                    role="progressbar"
+                  ></div>
+                </div>
+              </li>
+            }
+          </ul>
+        </app-animated-card>
+      </section>
+    }
+
+    @if (summary(); as text) {
+      <section class="mb-4" [@fadeInUp]>
+        <app-animated-card padding="lg" [hoverable]="true">
+          <h2 class="section-heading mb-3">
+            <i class="fas fa-lightbulb text-accent"></i>
+            Summary
+          </h2>
+          <p class="text-secondary mb-0">{{ text }}</p>
+        </app-animated-card>
+      </section>
+    }
+
+    @if (sections().length > 0) {
+      <section [@fadeInUp]>
+        <app-animated-card padding="lg" [hoverable]="false">
+          <h2 class="section-heading mb-3">Sections</h2>
+          @for (section of sections(); track section.title) {
+            <div class="insight-section mb-3">
+              <h3 class="insight-section-title">{{ section.title }}</h3>
+              <p class="text-secondary small mb-0">{{ section.content }}</p>
+            </div>
+          }
+        </app-animated-card>
+      </section>
+    }
+
+    @if (!summary() && sections().length === 0 && risks().length === 0 && importantFiles().length === 0 && circularDependencies().length === 0) {
+      <p class="text-secondary">No insights available yet.</p>
+    }
+  }
+</div>

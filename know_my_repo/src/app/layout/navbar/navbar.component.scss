@@ -1,0 +1,63 @@
+@use '../../variables' as *;
+
+.app-navbar {
+  height: $navbar-height;
+  background: $glass-bg !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid $glass-border;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.35s $ease-out-expo;
+
+  .navbar-brand {
+    color: $text-primary !important;
+    font-size: 1.05rem;
+    transition: color 0.25s ease, transform 0.3s $ease-spring;
+
+    &:hover {
+      color: $accent !important;
+      transform: scale(1.02);
+    }
+
+    i {
+      transition: transform 0.4s $ease-spring;
+    }
+    &:hover i {
+      transform: rotate(-12deg) scale(1.1);
+    }
+  }
+
+  .btn-theme-toggle {
+    border: 1px solid $border-color;
+    color: $text-secondary;
+    background: transparent;
+    transition: color 0.25s ease, background 0.25s ease, transform 0.3s $ease-spring;
+
+    &:hover {
+      background: $accent-muted;
+      color: $accent;
+      transform: scale(1.06);
+    }
+  }
+
+  .btn-outline-light {
+    border-color: $border-color;
+    color: $text-secondary;
+    transition: all 0.3s $ease-out-expo;
+
+    &:hover {
+      background: $accent-muted;
+      border-color: $accent;
+      color: $accent;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    }
+
+    &.active {
+      background: $accent;
+      border-color: $accent;
+      color: white;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+    }
+  }
+}

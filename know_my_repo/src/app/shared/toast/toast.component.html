@@ -1,0 +1,23 @@
+<div class="toast-container" aria-live="polite">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div
+      class="toast-item toast-{{ toast.type }}"
+      role="alert"
+      [@toastIn]
+    >
+      <i class="fas {{ icon(toast.type) }} toast-icon"></i>
+      <div class="toast-body">
+        @if (toast.title) {
+          <strong class="toast-title">{{ toast.title }}</strong>
+        }
+        <p class="toast-message mb-0">{{ toast.message }}</p>
+      </div>
+      <button
+        type="button"
+        class="toast-close btn-close btn-close-white"
+        aria-label="Dismiss"
+        (click)="dismiss(toast)"
+      ></button>
+    </div>
+  }
+</div>

@@ -1,0 +1,132 @@
+<div class="dashboard-page">
+  <h2 class="mb-4">Overview</h2>
+  @if (loading() && !hasData()) {
+    <app-skeleton-loader variant="dashboard" />
+  } @else if (!hasData()) {
+    <app-empty-state
+      icon="fa-chart-pie"
+      title="No analysis yet"
+      message="Upload a repository or ZIP to see an overview of your codebase."
+      actionLabel="Upload codebase"
+      actionRoute="/upload"
+    />
+  } @else {
+    <h1 class="dashboard-title mb-4">Project Overview</h1>
+
+    <!-- Project Overview Card -->
+    <section class="dashboard-section mb-4" [@fadeIn]>
+      <app-animated-card padding="lg" [hoverable]="true">
+        <h2 class="card-title mb-4">
+          <i class="fas fa-folder-open me-2 text-accent"></i>
+          Project overview
+        </h2>
+        <div class="overview-grid">
+          @for (item of overviewItems(); track item.label) {
+            <div class="meta-item">
+              <span class="meta-label">{{ item.label }}</span>
+              <span class="meta-value">{{ item.value }}</span>
+            </div>
+          }
+        </div>
+        @if (analysis()?.frameworks?.length) {
+          <div class="mt-3">
+            @for (fw of analysis()!.frameworks; track fw) {
+              <span class="badge bg-primary me-1 mb-1">{{ fw }}</span>
+            }
+          </div>
+        }
+      </app-animated-card>
+    </section>
+
+    <!-- Three cards: Architecture, Workflow, Risks -->
+    <div class="row g-4 mb-4">
+      <div class="col-12 col-lg-4" [@fadeIn]>
+        <app-animated-card padding="md" [hoverable]="true">
+          <h3 class="h6 text-uppercase text-secondary mb-3">
+            <i class="fas fa-sitemap me-2"></i>Architecture
+          </h3>
+          @if (analysis()?.architectureStyle) {
+            <p class="mb-2">{{ analysis()!.architectureStyle }}</p>
+          }
+          @if (analysis()?.layers?.length) {
+            <span class="badge bg-secondary">{{ analysis()!.layers!.length }} layers</span>
+          }
+          <a [routerLink]="['/architecture']" class="stretched-link mt-2 d-inline-block small">
+            View details <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </app-animated-card>
+      </div>
+      <div class="col-12 col-lg-4" [@fadeIn]>
+        <app-animated-card padding="md" [hoverable]="true">
+          <h3 class="h6 text-uppercase text-secondary mb-3">
+            <i class="fas fa-diagram-project me-2"></i>Workflow
+          </h3>
+          @if (analysis()?.workflows?.length) {
+            <p class="mb-2">{{ analysis()!.workflows!.length }} workflow(s)</p>
+            <ul class="list-unstyled small mb-0">
+              @for (w of analysis()!.workflows!.slice(0, 3); track w.name) {
+                <li>{{ w.name }}</li>
+              }
+            </ul>
+          } @else {
+            <p class="text-muted small mb-0">No workflows detected.</p>
+          }
+          <a [routerLink]="['/workflow']" class="stretched-link mt-2 d-inline-block small">
+            View details <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </app-animated-card>
+      </div>
+      <div class="col-12 col-lg-4" [@fadeIn]>
+        <app-animated-card padding="md" [hoverable]="true">
+          <h3 class="h6 text-uppercase text-secondary mb-3">
+            <i class="fas fa-triangle-exclamation me-2"></i>Risks
+          </h3>
+          @if (analysis()?.risks?.length) {
+            <p class="mb-2">{{ analysis()!.risks!.length }} risk(s)</p>
+            <div class="progress-stack">
+              @for (r of analysis()!.risks!.slice(0, 3); track r.title) {
+                <div class="progress-item">
+                  <span class="progress-label">{{ r.title }}</span>
+                  <div class="progress" style="height: 6px;">
+                    <div
+                      class="progress-bar"
+                      [class.bg-danger]="r.severity === 'high'"
+                      [class.bg-warning]="r.severity === 'medium'"
+                      [class.bg-info]="r.severity === 'low' || !r.severity"
+                      [style.width.%]="r.severity === 'high' ? 90 : r.severity === 'medium' ? 60 : 30"
+                      role="progressbar"
+                    ></div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-muted small mb-0">No major risks detected.</p>
+          }
+          <a [routerLink]="['/insights']" class="stretched-link mt-2 d-inline-block small">
+            View details <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </app-animated-card>
+      </div>
+    </div>
+
+    <!-- Start Here Section (highlighted) -->
+    @if (firstSection(); as section) {
+      <section class="dashboard-section start-here-section rounded-xl p-4 mb-4" [@fadeIn]>
+        <h2 class="start-here-title mb-3">
+          <i class="fas fa-star me-2 text-warning"></i>
+          Start here
+        </h2>
+        <h3 class="h5 mb-2">{{ section.title }}</h3>
+        <p class="mb-0 text-secondary">{{ section.content }}</p>
+      </section>
+    }
+
+    @if (explain()?.summary) {
+      <app-animated-card padding="md" [hoverable]="true" [@fadeIn]>
+        <h3 class="h6 text-uppercase text-secondary mb-2">Summary</h3>
+        <p class="mb-0">{{ explain()!.summary }}</p>
+      </app-animated-card>
+    }
+  }
+</div>

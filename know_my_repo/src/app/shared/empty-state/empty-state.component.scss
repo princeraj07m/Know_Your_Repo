@@ -1,0 +1,42 @@
+@use '../../variables' as *;
+
+.empty-state {
+  color: $text-primary;
+
+  h5 {
+    color: $text-primary !important;
+  }
+
+  .empty-state-icon {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $accent-muted;
+    border-radius: 50%;
+    color: $accent;
+    font-size: 2.25rem;
+    animation: empty-state-float 4s ease-in-out infinite;
+    transition: transform 0.4s $ease-spring;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, $accent 0%, #2563eb 100%);
+    border: none;
+    transition: all 0.35s $ease-out-expo;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+
+    &:hover {
+      background: linear-gradient(135deg, $accent-hover 0%, $accent 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(59, 130, 246, 0.45);
+    }
+  }
+}
+
+@keyframes empty-state-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}

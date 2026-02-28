@@ -1,0 +1,6 @@
+<div class="loading-spinner" [attr.data-size]="size()">
+  <div class="spinner-ring"></div>
+  @if (message()) {
+    <p class="mt-3 mb-0 text-secondary small">{{ message() }}</p>
+  }
+</div>

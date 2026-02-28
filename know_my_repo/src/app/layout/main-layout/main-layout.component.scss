@@ -1,0 +1,96 @@
+@use '../../variables' as *;
+
+.main-layout {
+  min-height: 100vh;
+  position: relative;
+}
+
+.layout-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.layout-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      160deg,
+      var(--app-bg-primary) 0%,
+      var(--app-bg-secondary) 35%,
+      rgba(30, 41, 59, 0.95) 60%,
+      var(--app-bg-primary) 100%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.04) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(59, 130, 246, 0.03) 100%
+    );
+  background-size: 100% 100%, 200% 200%;
+  animation: layout-gradient-shift 20s ease-in-out infinite;
+  opacity: 1;
+}
+
+@keyframes layout-gradient-shift {
+  0%, 100% { background-position: 0% 0%, 0% 50%; }
+  50% { background-position: 0% 0%, 100% 50%; }
+}
+
+.layout-particles {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 15% 25%, rgba(59, 130, 246, 0.3) 0%, transparent 45%),
+    radial-gradient(2px 2px at 85% 75%, rgba(59, 130, 246, 0.25) 0%, transparent 45%),
+    radial-gradient(1.5px 1.5px at 50% 50%, rgba(148, 163, 184, 0.2) 0%, transparent 50%),
+    radial-gradient(1px 1px at 70% 15%, rgba(148, 163, 184, 0.15) 0%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 25% 85%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+  background-size: 320px 320px;
+  animation: particles-float 30s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes particles-float {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-320px, -320px) scale(1); }
+}
+
+.main-content {
+  position: relative;
+  z-index: 1;
+  margin-top: $navbar-height;
+  margin-left: 0;
+  min-height: calc(100vh - #{$navbar-height});
+  padding: 1.5rem;
+  transition: margin-left 0.4s $ease-out-expo;
+
+  @media (min-width: 992px) {
+    margin-left: $sidebar-width;
+  }
+}
+
+.main-layout.sidebar-collapsed .main-content {
+  @media (min-width: 992px) {
+    margin-left: $sidebar-collapsed-width;
+  }
+}
+
+.main-content-inner {
+  animation: page-fade-in 0.5s $ease-out-expo forwards;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top app-navbar">
+  <div class="container-fluid px-3 px-lg-4">
+    <button
+      type="button"
+      class="btn btn-link navbar-toggler d-lg-none text-white p-2 me-2"
+      aria-label="Toggle sidebar"
+      (click)="onMenuClick()"
+    >
+      <i class="fas fa-bars fa-lg"></i>
+    </button>
+    <a class="navbar-brand d-flex align-items-center gap-2 fw-semibold" routerLink="/">
+      <i class="fas fa-code text-accent"></i>
+      <span class="d-none d-sm-inline">Codebase Understanding Tool</span>
+    </a>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <button
+        type="button"
+        class="btn btn-theme-toggle btn-sm rounded-pill px-3"
+        [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+        (click)="onThemeToggle()"
+      >
+        <i class="fas" [class.fa-moon]="themeService.isDark()" [class.fa-sun]="!themeService.isDark()"></i>
+      </button>
+      <a class="btn btn-outline-light btn-sm rounded-pill px-3" routerLink="/upload" routerLinkActive="active">
+        <i class="fas fa-upload me-1"></i>
+        Upload
+      </a>
+    </div>
+  </div>
+</nav>

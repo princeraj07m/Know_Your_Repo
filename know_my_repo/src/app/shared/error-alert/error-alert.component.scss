@@ -1,0 +1,23 @@
+@use '../../variables' as *;
+
+.error-alert {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: $text-primary;
+
+  .alert-heading {
+    color: $error;
+    font-weight: 600;
+  }
+
+  .btn-outline-light {
+    border-color: $border-color;
+    color: $text-secondary;
+
+    &:hover {
+      background: $accent-muted;
+      border-color: $accent;
+      color: $accent;
+    }
+  }
+}

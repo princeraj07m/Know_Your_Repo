@@ -1,0 +1,43 @@
+@use '../../variables' as *;
+
+.workflow-page {
+  h2 {
+    color: $text-primary;
+  }
+}
+
+.workflow-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin-bottom: 1.5rem;
+}
+
+.section-heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $text-primary;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.diagram-card {
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.execution-flow-text {
+  background: $glass-bg;
+  border: 1px solid $glass-border;
+  border-radius: $radius-md;
+  padding: 1.25rem;
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: $text-primary;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 480px;
+  overflow-y: auto;
+}

@@ -1,0 +1,110 @@
+<div class="upload-page container py-5 position-relative">
+  @if (isAnalyzing()) {
+    <div class="upload-overlay" role="status" aria-live="polite">
+      <div class="upload-overlay-content">
+        <app-loading-spinner size="lg" [message]="stepLabel()" />
+        <p class="upload-step-text mt-3 mb-0">{{ stepLabel() }}</p>
+      </div>
+    </div>
+  }
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8">
+      <h1 class="upload-title text-center mb-2">
+        Understand Your Codebase
+      </h1>
+      <p class="upload-subtitle text-center mb-5">
+        Paste a GitHub repo URL or upload a ZIP of your project to analyze routes, controllers, models, and architecture.
+      </p>
+
+      @if (errorMessage(); as err) {
+        <div class="upload-error" role="alert">
+          <div class="upload-error-icon">
+            <i class="fas fa-circle-exclamation"></i>
+          </div>
+          <div class="upload-error-body">
+            <span class="upload-error-title">Something went wrong</span>
+            <p class="upload-error-message mb-0">{{ err }}</p>
+          </div>
+        </div>
+      }
+
+      <div class="upload-card rounded-xl p-4 p-lg-5 mb-4">
+        <label class="upload-label form-label fw-semibold mb-2">GitHub Repository URL</label>
+        <div class="input-group input-group-lg rounded-3 overflow-hidden">
+          <span class="input-group-text upload-input-prefix border-end-0">
+            <i class="fab fa-github"></i>
+          </span>
+          <input
+            type="url"
+            class="form-control upload-input border-start-0"
+            placeholder="https://github.com/owner/repo"
+            [ngModel]="githubUrl()"
+            (ngModelChange)="githubUrl.set($event)"
+            (input)="onGitHubInput()"
+            [readOnly]="isAnalyzing()"
+          />
+        </div>
+      </div>
+
+      <div class="or-divider d-flex align-items-center gap-3 my-4">
+        <span class="line"></span>
+        <span class="or-divider-text">or</span>
+        <span class="line"></span>
+      </div>
+
+      <div
+        class="drop-zone rounded-xl p-5 text-center mb-4 position-relative"
+        [class.drop-zone--active]="isDragging()"
+        [class.drop-zone--disabled]="isAnalyzing()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+      >
+        <input
+          type="file"
+          class="d-none"
+          accept=".zip"
+          #fileInput
+          (change)="onFileSelect($event)"
+        />
+        @if (selectedFile(); as file) {
+          <div class="d-flex align-items-center justify-content-center gap-2 flex-wrap drop-zone-selected">
+            <i class="fas fa-file-zipper fa-2x text-accent"></i>
+            <span class="drop-zone-filename text-break">{{ file.name }}</span>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-light rounded-pill"
+              (click)="clearFile(); fileInput.value = ''"
+              [disabled]="isAnalyzing()"
+            >
+              Clear
+            </button>
+          </div>
+        } @else {
+          <div (click)="fileInput.click()" class="cursor-pointer drop-zone-inner">
+            <i class="fas fa-file-zipper fa-3x drop-zone-icon mb-3"></i>
+            <p class="drop-zone-title mb-1 fw-semibold">Drag &amp; drop your project ZIP</p>
+            <p class="drop-zone-hint small mb-0">or click to browse (max 100MB)</p>
+          </div>
+        }
+      </div>
+
+      <div class="text-center">
+        <button
+          type="button"
+          class="btn btn-analyze btn-primary btn-lg rounded-pill px-5 py-3"
+          [disabled]="!canAnalyze || isAnalyzing()"
+          (click)="onAnalyze()"
+        >
+          @if (isAnalyzing()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            {{ stepLabel() }}
+          } @else {
+            <i class="fas fa-magnifying-glass-chart me-2"></i>
+            Analyze Codebase
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

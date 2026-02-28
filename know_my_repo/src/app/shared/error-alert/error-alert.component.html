@@ -1,0 +1,20 @@
+<div class="error-alert alert rounded-xl d-flex align-items-start gap-3">
+  <i class="fas fa-circle-exclamation text-error flex-shrink-0 mt-1"></i>
+  <div class="flex-grow-1">
+    <h6 class="alert-heading mb-1">{{ title() }}</h6>
+    <p class="mb-2 small">{{ message() }}</p>
+    @if (retryable()) {
+      <button type="button" class="btn btn-sm btn-outline-light" (click)="onRetry()">
+        {{ retryLabel() }}
+      </button>
+    }
+  </div>
+  @if (dismissible()) {
+    <button
+      type="button"
+      class="btn-close btn-close-white flex-shrink-0"
+      aria-label="Close"
+      (click)="onDismiss()"
+    ></button>
+  }
+</div>

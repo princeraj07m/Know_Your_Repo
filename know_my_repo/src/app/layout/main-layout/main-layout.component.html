@@ -1,0 +1,19 @@
+<div class="main-layout" [class.sidebar-collapsed]="sidebarCollapsed()">
+  <div class="layout-bg">
+    <div class="layout-gradient"></div>
+    <div class="layout-particles" aria-hidden="true"></div>
+  </div>
+  <app-navbar (menuToggled)="onMenuToggled()" />
+  <app-toast />
+  <app-sidebar
+    [visible]="sidebarVisible()"
+    [collapsed]="sidebarCollapsed()"
+    (linkClicked)="onSidebarLinkClicked()"
+    (collapsedChange)="onSidebarCollapsedChange($event)"
+  />
+  <main class="main-content">
+    <div class="main-content-inner">
+      <router-outlet />
+    </div>
+  </main>
+</div>

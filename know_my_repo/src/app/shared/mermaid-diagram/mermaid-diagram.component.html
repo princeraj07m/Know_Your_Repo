@@ -1,0 +1,36 @@
+<div class="mermaid-diagram">
+  <div class="mermaid-toolbar">
+    <button type="button" class="btn btn-zoom" (click)="zoomOut()" title="Zoom out" [disabled]="zoomLevel() <= 0.5">
+      <i class="fas fa-minus"></i>
+    </button>
+    <span class="zoom-label">{{ (zoomLevel() * 100) | number:'1.0-0' }}%</span>
+    <button type="button" class="btn btn-zoom" (click)="zoomIn()" title="Zoom in" [disabled]="zoomLevel() >= 2">
+      <i class="fas fa-plus"></i>
+    </button>
+    <button type="button" class="btn btn-zoom" (click)="resetZoom()" title="Reset zoom">
+      <i class="fas fa-expand"></i>
+    </button>
+    <button type="button" class="btn btn-export" (click)="exportPng()" title="Export as PNG">
+      <i class="fas fa-download me-1"></i>
+      Export PNG
+    </button>
+  </div>
+  <div
+    class="mermaid-viewport"
+    [style.transform]="'scale(' + zoomLevel() + ')'"
+  >
+    <div #container class="mermaid-container"></div>
+  </div>
+  @if (isLoading()) {
+    <div class="mermaid-loading">
+      <div class="mermaid-spinner"></div>
+      <span>Rendering diagram…</span>
+    </div>
+  }
+  @if (hasError()) {
+    <div class="mermaid-error">
+      <i class="fas fa-circle-exclamation"></i>
+      <span>Could not render diagram. Check the syntax.</span>
+    </div>
+  }
+</div>
