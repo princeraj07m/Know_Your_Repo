@@ -1,30 +1,35 @@
-/* Design tokens - Developer Codebase Understanding Tool */
+/* Design tokens used inside the Angular app shell/components.
+   NOTE: These are mapped to CSS custom properties so that
+   colors automatically adapt to dark/light theme. */
 
-// Colors - Dark theme
-$bg-primary: #0f172a;
-$bg-secondary: #1e293b;
-$bg-tertiary: #334155;
+// Backgrounds (defer to theme variables)
+$bg-primary: var(--app-bg-primary);
+$bg-secondary: var(--app-bg-secondary);
+// Keep tertiary slightly elevated while still theme-aware
+$bg-tertiary: color-mix(in srgb, var(--app-bg-secondary) 70%, black 30%);
 
-// High-contrast text for readability on dark backgrounds (WCAG AA+)
-$text-primary: #f8fafc;
-$text-secondary: #e2e8f0;
-$text-muted: #cbd5e1;
+// Text colors – always read from theme vars for contrast
+$text-primary: var(--app-text-primary);
+$text-secondary: var(--app-text-secondary);
+$text-muted: var(--app-text-muted);
 
-$accent: #3b82f6;
-$accent-hover: #60a5fa;
-$accent-muted: rgba(59, 130, 246, 0.15);
+// Accent colors – use theme accent token where possible
+$accent: var(--app-accent);
+// Hover can safely be a bit lighter than accent
+$accent-hover: color-mix(in srgb, var(--app-accent) 80%, white 20%);
+$accent-muted: var(--app-accent-muted);
 
 $success: #22c55e;
 $warning: #eab308;
 $error: #ef4444;
 $info: #0ea5e9;
 
-$border-color: rgba(226, 232, 240, 0.2);
+// Borders & glass surfaces – theme driven
+$border-color: var(--app-border);
 $border-light: rgba(255, 255, 255, 0.08);
 
-// Glassmorphism (slightly lighter so text contrasts)
-$glass-bg: rgba(30, 41, 59, 0.75);
-$glass-border: rgba(255, 255, 255, 0.08);
+$glass-bg: var(--app-glass-bg);
+$glass-border: var(--app-glass-border);
 $glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
 
 // Shadows

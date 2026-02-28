@@ -182,29 +182,206 @@
 }
 
 .heatmap-progress {
+  width: 100%;
   height: 8px;
-  background: $bg-tertiary;
   border-radius: $radius-sm;
+  background: $bg-tertiary;
   overflow: hidden;
+  appearance: none;
 
-  .progress-bar {
+  &::-webkit-progress-bar {
+    background-color: transparent;
+  }
+
+  &::-webkit-progress-value {
+    border-radius: $radius-sm;
     transition: width 0.5s ease;
+  }
 
-    &--high {
-      background: $accent;
-    }
-    &--mid {
-      background: $info;
-    }
-    &--low {
-      background: $text-muted;
-    }
+  &::-moz-progress-bar {
+    border-radius: $radius-sm;
+    transition: width 0.5s ease;
   }
 }
 
+.heatmap-progress.progress-bar--high::-webkit-progress-value,
+.heatmap-progress.progress-bar--high::-moz-progress-bar {
+  background: $accent;
+}
+
+.heatmap-progress.progress-bar--mid::-webkit-progress-value,
+.heatmap-progress.progress-bar--mid::-moz-progress-bar {
+  background: $info;
+}
+
+.heatmap-progress.progress-bar--low::-webkit-progress-value,
+.heatmap-progress.progress-bar--low::-moz-progress-bar {
+  background: $text-muted;
+}
+
+.execution-readme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.execution-steps {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+.execution-step-index {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: $accent;
+  color: #0b1120;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+  flex-shrink: 0;
+}
+
+.execution-step-text {
+  font-size: 0.85rem;
+  color: $text-secondary;
+}
+
+.readme-bullets {
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: $text-secondary;
+}
+
+.folder-structure-section {
+  .folder-structure-header {
+    gap: 0.75rem;
+  }
+}
+
+.folder-structure-pill {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid $glass-border;
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.folder-root-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.folder-root-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: $glass-bg;
+  border: 1px solid $glass-border;
+  font-size: 0.8rem;
+  color: $text-secondary;
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.08);
+
+  i {
+    color: $accent;
+  }
+}
+
+.folder-root-label {
+  max-width: 8rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.folder-tree-code {
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 55%),
+    $glass-bg;
+  border-radius: $radius-md;
+  border: 1px solid $glass-border;
+  padding: 1rem 1.1rem;
+  font-family: $font-mono;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: $text-primary;
+  max-height: 360px;
+  overflow: auto;
+  box-shadow: $shadow-sm;
+  animation: float 14s ease-in-out infinite;
+}
+
+.insight-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.75rem 1rem;
+}
+
+.insight-section {
+  border-radius: $radius-md;
+  background: $glass-bg;
+  border: 1px solid $glass-border;
+  padding: 0.75rem 0.9rem;
+  list-style: none;
+  box-shadow: $shadow-sm;
+
+  &[open] {
+    box-shadow: $shadow-md;
+  }
+}
+
+.insight-section-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.insight-section-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: $accent;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+  flex-shrink: 0;
+}
+
 .insight-section-title {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: $text-primary;
-  margin-bottom: 0.25rem;
+  flex: 1;
+}
+
+.insight-section-chevron {
+  color: $text-muted;
+  font-size: 0.75rem;
+}
+
+.insight-section-body {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid $glass-border;
 }

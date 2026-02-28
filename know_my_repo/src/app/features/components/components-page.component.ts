@@ -4,13 +4,12 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { CodebaseStateService } from '../../services/codebase-state.service';
 import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
 import { AnimatedCardComponent } from '../../shared/animated-card/animated-card.component';
-import { TracePanelComponent } from '../../shared/trace-panel/trace-panel.component';
 import type { RouteTrace } from '../../models';
 
 @Component({
   selector: 'app-components-page',
   standalone: true,
-  imports: [CommonModule, EmptyStateComponent, AnimatedCardComponent, TracePanelComponent],
+  imports: [CommonModule, EmptyStateComponent, AnimatedCardComponent],
   templateUrl: './components-page.component.html',
   styleUrl: './components-page.component.scss',
   animations: [
@@ -27,16 +26,9 @@ export class ComponentsPageComponent {
   readonly hasData = this.state.hasData;
   readonly coreComponents = computed(() => this.state.analysis()?.coreComponents ?? []);
   readonly routeTraces = computed(() => this.state.analysis()?.routeTraces ?? []);
-  readonly selectedTrace = signal<RouteTrace | null>(null);
-  readonly tracePanelVisible = signal(false);
+  readonly expandedRoute = signal<string | null>(null);
 
-  openTrace(trace: RouteTrace): void {
-    this.selectedTrace.set(trace);
-    this.tracePanelVisible.set(true);
-  }
-
-  closeTracePanel(): void {
-    this.tracePanelVisible.set(false);
-    this.selectedTrace.set(null);
+  toggleTrace(trace: RouteTrace): void {
+    this.expandedRoute.update((current) => (current === trace.route ? null : trace.route));
   }
 }

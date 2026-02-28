@@ -64,20 +64,92 @@
                   <span class="heatmap-item-path">{{ f.label ?? f.path }}</span>
                   <span class="heatmap-item-pct">{{ f.importance }}%</span>
                 </div>
-                <div class="progress heatmap-progress">
-                  <div
-                    class="progress-bar"
-                    [class.progress-bar--high]="f.importance >= 70"
-                    [class.progress-bar--mid]="f.importance >= 40 && f.importance < 70"
-                    [class.progress-bar--low]="f.importance < 40"
-                    [style.width.%]="f.importance"
-                    role="progressbar"
-                  ></div>
-                </div>
+                <progress
+                  class="heatmap-progress"
+                  [ngClass]="{
+                    'progress-bar--high': f.importance >= 70,
+                    'progress-bar--mid': f.importance >= 40 && f.importance < 70,
+                    'progress-bar--low': f.importance < 40
+                  }"
+                  [value]="f.importance"
+                  max="100"
+                ></progress>
               </li>
             }
           </ul>
         </app-animated-card>
+      </section>
+    }
+
+    @if (folderSection(); as folder) {
+      <section class="insights-section folder-structure-section mb-4" [@fadeInUp]>
+        <app-animated-card padding="lg" [hoverable]="true">
+          <div class="folder-structure-header d-flex align-items-center justify-content-between mb-3">
+            <h2 class="section-heading mb-0">
+              <i class="fas fa-folder-tree text-accent"></i>
+              Folder structure
+            </h2>
+            <span class="folder-structure-pill text-secondary">
+              From analysis
+            </span>
+          </div>
+
+          @if (folderRoots().length > 0) {
+            <div class="folder-root-chips mb-3">
+              @for (root of folderRoots(); track root) {
+                <span class="folder-root-chip">
+                  <i class="fas fa-folder"></i>
+                  <span class="folder-root-label">{{ root }}</span>
+                </span>
+              }
+            </div>
+          }
+
+          <pre class="folder-tree-code mb-0" aria-label="Folder structure">{{ folderTreeText() }}</pre>
+        </app-animated-card>
+      </section>
+    }
+
+    @if (executionSection() || readmeSection()) {
+      <section class="insights-section mb-4" [@fadeInUp]>
+        <div class="execution-readme-grid">
+          @if (executionSection(); as exec) {
+            <app-animated-card padding="lg" [hoverable]="false">
+              <h2 class="section-heading mb-2">
+                <i class="fas fa-diagram-project text-accent"></i>
+                Execution flow (steps)
+              </h2>
+              <p class="text-secondary small mb-3">
+                High-level sequence of how requests move through the system.
+              </p>
+              <ol class="execution-steps mb-0">
+                @for (step of executionSteps(); track step; let i = $index) {
+                  <li>
+                    <span class="execution-step-index">{{ i + 1 }}</span>
+                    <span class="execution-step-text">{{ step }}</span>
+                  </li>
+                }
+              </ol>
+            </app-animated-card>
+          }
+
+          @if (readmeSection(); as readme) {
+            <app-animated-card padding="lg" [hoverable]="false">
+              <h2 class="section-heading mb-2">
+                <i class="fas fa-file-alt text-accent"></i>
+                README highlights
+              </h2>
+              <p class="text-secondary small mb-3">
+                Key points extracted from the project README.
+              </p>
+              <ul class="readme-bullets mb-0">
+                @for (item of readmeBullets(); track item) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </app-animated-card>
+          }
+        </div>
       </section>
     }
 
@@ -93,16 +165,26 @@
       </section>
     }
 
-    @if (sections().length > 0) {
+    @if (otherSections().length > 0) {
       <section [@fadeInUp]>
         <app-animated-card padding="lg" [hoverable]="false">
           <h2 class="section-heading mb-3">Sections</h2>
-          @for (section of sections(); track section.title) {
-            <div class="insight-section mb-3">
-              <h3 class="insight-section-title">{{ section.title }}</h3>
-              <p class="text-secondary small mb-0">{{ section.content }}</p>
-            </div>
-          }
+          <div class="insight-sections-grid">
+            @for (section of otherSections(); track section.title) {
+              <details class="insight-section">
+                <summary class="insight-section-summary">
+                  <span class="insight-section-dot"></span>
+                  <span class="insight-section-title">{{ section.title }}</span>
+                  <span class="insight-section-chevron">
+                    <i class="fas fa-chevron-down"></i>
+                  </span>
+                </summary>
+                <div class="insight-section-body">
+                  <p class="text-secondary small mb-0">{{ section.content }}</p>
+                </div>
+              </details>
+            }
+          </div>
         </app-animated-card>
       </section>
     }

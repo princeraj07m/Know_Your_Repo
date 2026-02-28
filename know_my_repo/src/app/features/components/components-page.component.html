@@ -17,11 +17,18 @@
           Core components
         </h2>
         @if (coreComponents().length > 0) {
-          <ul class="list-unstyled mb-0">
+          <div class="component-grid">
             @for (c of coreComponents(); track c) {
-              <li class="component-item py-2 border-bottom border-secondary border-opacity-25">{{ c }}</li>
+              <div class="component-chip">
+                <div class="component-chip-icon">
+                  <i class="fas fa-cube"></i>
+                </div>
+                <div class="component-chip-body">
+                  <span class="component-chip-name">{{ c }}</span>
+                </div>
+              </div>
             }
-          </ul>
+          </div>
         } @else {
           <p class="text-secondary small mb-0">No components detected.</p>
         }
@@ -38,26 +45,52 @@
           <p class="text-secondary small mb-3">Click a route to see controller, service, and model.</p>
           <ul class="trace-route-list list-unstyled mb-0">
             @for (trace of routeTraces(); track trace.route) {
-              <li>
+              <li class="trace-route-item">
                 <button
                   type="button"
                   class="trace-route-btn"
-                  (click)="openTrace(trace)"
+                  [class.trace-route-btn--active]="expandedRoute() === trace.route"
+                  (click)="toggleTrace(trace)"
                 >
-                  <i class="fas fa-chevron-right me-2"></i>
+                  <i class="fas fa-chevron-right me-2 chevron" [class.chevron--open]="expandedRoute() === trace.route"></i>
                   {{ trace.route }}
                 </button>
+                @if (expandedRoute() === trace.route) {
+                  <div class="trace-inline-details">
+                    @if (trace.controller) {
+                      <div class="trace-inline-row">
+                        <span class="trace-inline-pill trace-inline-pill--controller">
+                          <i class="fas fa-code"></i>
+                          Controller
+                        </span>
+                        <span class="trace-inline-value">{{ trace.controller }}</span>
+                      </div>
+                    }
+                    @if (trace.service) {
+                      <div class="trace-inline-row">
+                        <span class="trace-inline-pill trace-inline-pill--service">
+                          <i class="fas fa-cog"></i>
+                          Service
+                        </span>
+                        <span class="trace-inline-value">{{ trace.service }}</span>
+                      </div>
+                    }
+                    @if (trace.model) {
+                      <div class="trace-inline-row">
+                        <span class="trace-inline-pill trace-inline-pill--model">
+                          <i class="fas fa-database"></i>
+                          Model
+                        </span>
+                        <span class="trace-inline-value">{{ trace.model }}</span>
+                      </div>
+                    }
+                  </div>
+                }
               </li>
             }
           </ul>
         </app-animated-card>
       </section>
     }
-
-    <app-trace-panel
-      [trace]="selectedTrace()"
-      [visible]="tracePanelVisible()"
-      (closed)="closeTracePanel()"
-    />
   }
 </div>

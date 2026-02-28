@@ -35,6 +35,39 @@
             }
           </div>
         }
+        @if (databaseModels().length > 0) {
+          <div class="database-schema mt-4">
+            <div class="database-header d-flex align-items-center justify-content-between mb-2">
+              <div class="d-flex align-items-center gap-2">
+                <i class="fas fa-database text-accent"></i>
+                <span class="database-title">Database schema</span>
+              </div>
+              <span class="database-count text-muted small">
+                {{ databaseModels().length }} collection(s)
+              </span>
+            </div>
+            <div class="database-grid">
+              @for (model of databaseModels(); track model.name) {
+                <div class="database-card">
+                  <div class="database-card-header">
+                    <span class="database-model-pill">
+                      {{ model.name }}
+                    </span>
+                  </div>
+                  @if (model.fields.length > 0) {
+                    <div class="database-fields">
+                      @for (field of model.fields; track field) {
+                        <span class="database-field-chip">{{ field }}</span>
+                      }
+                    </div>
+                  } @else {
+                    <p class="text-secondary small mb-0">No fields summarised.</p>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
       </app-animated-card>
     </section>
 
@@ -87,16 +120,16 @@
               @for (r of analysis()!.risks!.slice(0, 3); track r.title) {
                 <div class="progress-item">
                   <span class="progress-label">{{ r.title }}</span>
-                  <div class="progress" style="height: 6px;">
-                    <div
-                      class="progress-bar"
-                      [class.bg-danger]="r.severity === 'high'"
-                      [class.bg-warning]="r.severity === 'medium'"
-                      [class.bg-info]="r.severity === 'low' || !r.severity"
-                      [style.width.%]="r.severity === 'high' ? 90 : r.severity === 'medium' ? 60 : 30"
-                      role="progressbar"
-                    ></div>
-                  </div>
+                  <progress
+                    class="risk-progress"
+                    [ngClass]="{
+                      'risk-progress--high': r.severity === 'high',
+                      'risk-progress--medium': r.severity === 'medium',
+                      'risk-progress--low': r.severity === 'low' || !r.severity
+                    }"
+                    [value]="r.severity === 'high' ? 90 : r.severity === 'medium' ? 60 : 30"
+                    max="100"
+                  ></progress>
                 </div>
               }
             </div>
@@ -111,21 +144,42 @@
     </div>
 
     <!-- Start Here Section (highlighted) -->
-    @if (firstSection(); as section) {
+    @if (folderSection(); as folder) {
       <section class="dashboard-section start-here-section rounded-xl p-4 mb-4" [@fadeIn]>
         <h2 class="start-here-title mb-3">
           <i class="fas fa-star me-2 text-warning"></i>
           Start here
         </h2>
-        <h3 class="h5 mb-2">{{ section.title }}</h3>
-        <p class="mb-0 text-secondary">{{ section.content }}</p>
+        <h3 class="start-folder-heading mb-2">
+          <span class="start-folder-label">Folder structure</span>
+        </h3>
+
+        @if (folderRoots().length > 0) {
+          <div class="start-folder-pills mb-3" aria-label="Top-level folders">
+            @for (root of folderRoots(); track root) {
+              <span class="start-folder-pill">
+                <i class="fas fa-folder-open"></i>
+                <span class="start-folder-pill-label">{{ root }}</span>
+              </span>
+            }
+          </div>
+        }
+
+        <pre class="start-folder-tree mb-0" aria-label="Folder structure tree">
+{{ folderTreeText() }}
+        </pre>
       </section>
     }
 
     @if (explain()?.summary) {
-      <app-animated-card padding="md" [hoverable]="true" [@fadeIn]>
-        <h3 class="h6 text-uppercase text-secondary mb-2">Summary</h3>
-        <p class="mb-0">{{ explain()!.summary }}</p>
+      <app-animated-card padding="md" [hoverable]="false" [@fadeIn] class="summary-card">
+        <div class="summary-header d-flex align-items-center gap-2 mb-2">
+          <span class="summary-badge">
+            <i class="fas fa-sparkles"></i>
+          </span>
+          <h3 class="h6 text-uppercase text-secondary mb-0">Summary</h3>
+        </div>
+        <p class="summary-text mb-0 text-secondary">{{ explain()!.summary }}</p>
       </app-animated-card>
     }
   }
