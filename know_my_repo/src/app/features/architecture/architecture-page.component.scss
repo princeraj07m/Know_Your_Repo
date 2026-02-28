@@ -1,7 +1,7 @@
 @use '../../variables' as *;
 
 .architecture-page {
-  h2 {
+  h2, h5 {
     color: $text-primary;
   }
 }

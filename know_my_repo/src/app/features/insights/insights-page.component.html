@@ -11,7 +11,7 @@
     />
   } @else {
     @if (circularDependencies().length > 0) {
-      <section class="insights-section circular-alert-section mb-4" [@fadeInUp]>
+      <section class="insights-section insight-card insight-card--alert" [@fadeInUp]>
         <div class="circular-alert-card">
           <div class="circular-alert-icon">
             <i class="fas fa-exclamation-triangle"></i>
@@ -21,7 +21,7 @@
             <p class="circular-alert-desc mb-0">The following cycles were found. Consider refactoring to break the cycle.</p>
             <ul class="circular-alert-list mt-2 mb-0">
               @for (dep of circularDependencies(); track dep) {
-                <li>{{ dep }}</li>
+                <li class="circular-alert-list-item">{{ dep }}</li>
               }
             </ul>
           </div>
@@ -30,9 +30,9 @@
     }
 
     @if (risks().length > 0) {
-      <section class="insights-section risk-badges-section mb-4" [@fadeInUp]>
-        <h2 class="section-heading mb-3">
-          <i class="fas fa-triangle-exclamation text-accent"></i>
+      <section class="insights-section" [@fadeInUp]>
+        <h2 class="insight-section-heading">
+          <i class="fas fa-triangle-exclamation insight-section-icon"></i>
           Risk indicators
         </h2>
         <div class="risk-badges">
@@ -41,7 +41,7 @@
               <span class="risk-badge-label">{{ r.severity ?? 'low' }}</span>
               <span class="risk-badge-title">{{ r.title }}</span>
               @if (r.description) {
-                <p class="risk-badge-desc small mb-0">{{ r.description }}</p>
+                <p class="risk-badge-desc mb-0">{{ r.description }}</p>
               }
             </div>
           }
@@ -50,13 +50,13 @@
     }
 
     @if (topFiles().length > 0) {
-      <section class="insights-section heatmap-section mb-4" [@fadeInUp]>
-        <app-animated-card padding="lg" [hoverable]="true">
-          <h2 class="section-heading mb-3">
-            <i class="fas fa-fire text-accent"></i>
+      <section class="insights-section" [@fadeInUp]>
+        <div class="insight-card">
+          <h2 class="insight-section-heading">
+            <i class="fas fa-fire insight-section-icon"></i>
             Most important files
           </h2>
-          <p class="text-secondary small mb-3">Files ranked by relevance to the codebase.</p>
+          <p class="insight-card-desc">Files ranked by relevance to the codebase.</p>
           <ul class="heatmap-list list-unstyled mb-0">
             @for (f of topFiles(); track f.path; let i = $index) {
               <li class="heatmap-item" [class.heatmap-item--top3]="i < 3">
@@ -77,120 +77,142 @@
               </li>
             }
           </ul>
-        </app-animated-card>
+        </div>
       </section>
     }
 
     @if (folderSection(); as folder) {
-      <section class="insights-section folder-structure-section mb-4" [@fadeInUp]>
-        <app-animated-card padding="lg" [hoverable]="true">
-          <div class="folder-structure-header d-flex align-items-center justify-content-between mb-3">
-            <h2 class="section-heading mb-0">
-              <i class="fas fa-folder-tree text-accent"></i>
-              Folder structure
-            </h2>
-            <span class="folder-structure-pill text-secondary">
-              From analysis
-            </span>
-          </div>
-
-          @if (folderRoots().length > 0) {
-            <div class="folder-root-chips mb-3">
-              @for (root of folderRoots(); track root) {
-                <span class="folder-root-chip">
-                  <i class="fas fa-folder"></i>
-                  <span class="folder-root-label">{{ root }}</span>
-                </span>
-              }
-            </div>
-          }
-
-          <pre class="folder-tree-code mb-0" aria-label="Folder structure">{{ folderTreeText() }}</pre>
-        </app-animated-card>
-      </section>
-    }
-
-    @if (executionSection() || readmeSection()) {
-      <section class="insights-section mb-4" [@fadeInUp]>
-        <div class="execution-readme-grid">
-          @if (executionSection(); as exec) {
-            <app-animated-card padding="lg" [hoverable]="false">
-              <h2 class="section-heading mb-2">
-                <i class="fas fa-diagram-project text-accent"></i>
-                Execution flow (steps)
-              </h2>
-              <p class="text-secondary small mb-3">
-                High-level sequence of how requests move through the system.
-              </p>
-              <ol class="execution-steps mb-0">
-                @for (step of executionSteps(); track step; let i = $index) {
-                  <li>
-                    <span class="execution-step-index">{{ i + 1 }}</span>
-                    <span class="execution-step-text">{{ step }}</span>
-                  </li>
-                }
-              </ol>
-            </app-animated-card>
-          }
-
-          @if (readmeSection(); as readme) {
-            <app-animated-card padding="lg" [hoverable]="false">
-              <h2 class="section-heading mb-2">
-                <i class="fas fa-file-alt text-accent"></i>
-                README highlights
-              </h2>
-              <p class="text-secondary small mb-3">
-                Key points extracted from the project README.
-              </p>
-              <ul class="readme-bullets mb-0">
-                @for (item of readmeBullets(); track item) {
-                  <li>{{ item }}</li>
-                }
-              </ul>
-            </app-animated-card>
+      <section class="insights-section" [@fadeInUp]>
+        <div class="insight-card">
+          <h2 class="insight-section-heading">
+            <i class="fas fa-folder-tree insight-section-icon"></i>
+            Folder structure
+          </h2>
+          @if (folderTreeText().trim()) {
+            <app-file-tree [treeText]="folderTreeText()" class="insights-file-tree" />
+          } @else {
+            <p class="insight-empty-text">No folder structure available.</p>
           }
         </div>
       </section>
     }
 
-    @if (summary(); as text) {
-      <section class="mb-4" [@fadeInUp]>
-        <app-animated-card padding="lg" [hoverable]="true">
-          <h2 class="section-heading mb-3">
-            <i class="fas fa-lightbulb text-accent"></i>
+    @if (executionSection()) {
+      <section class="insights-section" [@fadeInUp]>
+        <div class="insight-card">
+          <h2 class="insight-section-heading">
+            <i class="fas fa-diagram-project insight-section-icon"></i>
+            Execution flow (steps)
+          </h2>
+          <p class="insight-card-desc">High-level sequence of how requests move through the system.</p>
+          <div class="execution-timeline">
+            @for (item of executionStepsParsed(); track $index) {
+              @if (item.type === 'step') {
+                <div class="timeline-step">
+                  <div class="timeline-step-marker">
+                    <span class="timeline-step-number">{{ item.index }}</span>
+                  </div>
+                  <div class="timeline-step-content">
+                    <span class="timeline-step-title">{{ item.title }}</span>
+                  </div>
+                </div>
+              }
+              @if (item.type === 'routes') {
+                <div class="timeline-step timeline-step--routes">
+                  <div class="timeline-step-marker timeline-step-marker--routes">
+                    <i class="fas fa-route"></i>
+                  </div>
+                  <div class="timeline-step-content">
+                    <span class="timeline-step-title timeline-step-title--routes">Routes</span>
+                    @if (item.routes && item.routes.length > 0) {
+                      <div class="timeline-route-pills">
+                        @for (route of item.routes; track route) {
+                          <span class="route-pill">{{ route }}</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+      </section>
+    }
+
+    @if (readmeSection()) {
+      <section class="insights-section" [@fadeInUp]>
+        <div class="insight-card">
+          <h2 class="insight-section-heading">
+            <i class="fas fa-file-alt insight-section-icon"></i>
+            README highlights
+          </h2>
+          <p class="insight-card-desc">Key points extracted from the project README.</p>
+          <div class="readme-chips">
+            @for (item of readmeBullets(); track item) {
+              <span class="readme-chip">
+                <i class="fas fa-check readme-chip-icon"></i>
+                <span class="readme-chip-text">{{ item }}</span>
+              </span>
+            }
+          </div>
+        </div>
+      </section>
+    }
+
+    @if (summaryCards().length > 0) {
+      <section class="insights-section" [@fadeInUp]>
+        <h2 class="insight-section-heading">
+          <i class="fas fa-lightbulb insight-section-icon"></i>
+          Summary
+        </h2>
+        <div class="summary-cards-grid">
+          @for (card of summaryCards(); track card.label) {
+            <div class="summary-kv-card">
+              <span class="summary-kv-label">{{ card.label }}</span>
+              <span class="summary-kv-value">{{ card.value }}</span>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    @if (summary() && summaryCards().length === 0) {
+      <section class="insights-section" [@fadeInUp]>
+        <div class="insight-card">
+          <h2 class="insight-section-heading">
+            <i class="fas fa-lightbulb insight-section-icon"></i>
             Summary
           </h2>
-          <p class="text-secondary mb-0">{{ text }}</p>
-        </app-animated-card>
+          <p class="insight-summary-text">{{ summary() }}</p>
+        </div>
       </section>
     }
 
     @if (otherSections().length > 0) {
-      <section [@fadeInUp]>
-        <app-animated-card padding="lg" [hoverable]="false">
-          <h2 class="section-heading mb-3">Sections</h2>
+      <section class="insights-section" [@fadeInUp]>
+        <div class="insight-card">
+          <h2 class="insight-section-heading">Sections</h2>
           <div class="insight-sections-grid">
             @for (section of otherSections(); track section.title) {
-              <details class="insight-section">
+              <details class="insight-section-details">
                 <summary class="insight-section-summary">
                   <span class="insight-section-dot"></span>
                   <span class="insight-section-title">{{ section.title }}</span>
-                  <span class="insight-section-chevron">
-                    <i class="fas fa-chevron-down"></i>
-                  </span>
+                  <i class="fas fa-chevron-down insight-section-chevron"></i>
                 </summary>
                 <div class="insight-section-body">
-                  <p class="text-secondary small mb-0">{{ section.content }}</p>
+                  <p class="insight-section-content">{{ section.content }}</p>
                 </div>
               </details>
             }
           </div>
-        </app-animated-card>
+        </div>
       </section>
     }
 
     @if (!summary() && sections().length === 0 && risks().length === 0 && importantFiles().length === 0 && circularDependencies().length === 0) {
-      <p class="text-secondary">No insights available yet.</p>
+      <p class="insight-empty-text">No insights available yet.</p>
     }
   }
 </div>

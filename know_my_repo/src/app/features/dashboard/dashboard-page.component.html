@@ -1,5 +1,5 @@
 <div class="dashboard-page">
-  <h2 class="mb-4">Overview</h2>
+  <h2 class="dashboard-page-title mb-4">Overview</h2>
   @if (loading() && !hasData()) {
     <app-skeleton-loader variant="dashboard" />
   } @else if (!hasData()) {
@@ -14,10 +14,10 @@
     <h1 class="dashboard-title mb-4">Project Overview</h1>
 
     <!-- Project Overview Card -->
-    <section class="dashboard-section mb-4" [@fadeIn]>
-      <app-animated-card padding="lg" [hoverable]="true">
+    <section class="dashboard-section dashboard-card-section mb-4" [@fadeIn]>
+      <app-animated-card padding="md" [hoverable]="true" class="dashboard-card">
         <h2 class="card-title mb-4">
-          <i class="fas fa-folder-open me-2 text-accent"></i>
+          <i class="fas fa-folder-open me-2 icon-accent"></i>
           Project overview
         </h2>
         <div class="overview-grid">
@@ -29,9 +29,9 @@
           }
         </div>
         @if (analysis()?.frameworks?.length) {
-          <div class="mt-3">
+          <div class="mt-3 framework-badges">
             @for (fw of analysis()!.frameworks; track fw) {
-              <span class="badge bg-primary me-1 mb-1">{{ fw }}</span>
+              <span class="badge-pill badge-pill--accent">{{ fw }}</span>
             }
           </div>
         }
@@ -39,7 +39,7 @@
           <div class="database-schema mt-4">
             <div class="database-header d-flex align-items-center justify-content-between mb-2">
               <div class="d-flex align-items-center gap-2">
-                <i class="fas fa-database text-accent"></i>
+                <i class="fas fa-database icon-accent"></i>
                 <span class="database-title">Database schema</span>
               </div>
               <span class="database-count text-muted small">
@@ -72,26 +72,26 @@
     </section>
 
     <!-- Three cards: Architecture, Workflow, Risks -->
-    <div class="row g-4 mb-4">
+    <div class="row g-4 mb-4 dashboard-cards-row">
       <div class="col-12 col-lg-4" [@fadeIn]>
-        <app-animated-card padding="md" [hoverable]="true">
-          <h3 class="h6 text-uppercase text-secondary mb-3">
+        <app-animated-card padding="md" [hoverable]="true" [fillHeight]="true" class="dashboard-card h-100">
+          <h3 class="card-section-heading">
             <i class="fas fa-sitemap me-2"></i>Architecture
           </h3>
           @if (analysis()?.architectureStyle) {
             <p class="mb-2">{{ analysis()!.architectureStyle }}</p>
           }
           @if (analysis()?.layers?.length) {
-            <span class="badge bg-secondary">{{ analysis()!.layers!.length }} layers</span>
+            <span class="badge-pill badge-pill--neutral">{{ analysis()!.layers!.length }} layers</span>
           }
-          <a [routerLink]="['/architecture']" class="stretched-link mt-2 d-inline-block small">
+          <a [routerLink]="['/architecture']" class="card-action-btn mt-auto">
             View details <i class="fas fa-arrow-right ms-1"></i>
           </a>
         </app-animated-card>
       </div>
       <div class="col-12 col-lg-4" [@fadeIn]>
-        <app-animated-card padding="md" [hoverable]="true">
-          <h3 class="h6 text-uppercase text-secondary mb-3">
+        <app-animated-card padding="md" [hoverable]="true" [fillHeight]="true" class="dashboard-card h-100">
+          <h3 class="card-section-heading">
             <i class="fas fa-diagram-project me-2"></i>Workflow
           </h3>
           @if (analysis()?.workflows?.length) {
@@ -104,14 +104,14 @@
           } @else {
             <p class="text-muted small mb-0">No workflows detected.</p>
           }
-          <a [routerLink]="['/workflow']" class="stretched-link mt-2 d-inline-block small">
+          <a [routerLink]="['/workflow']" class="card-action-btn mt-auto">
             View details <i class="fas fa-arrow-right ms-1"></i>
           </a>
         </app-animated-card>
       </div>
       <div class="col-12 col-lg-4" [@fadeIn]>
-        <app-animated-card padding="md" [hoverable]="true">
-          <h3 class="h6 text-uppercase text-secondary mb-3">
+        <app-animated-card padding="md" [hoverable]="true" [fillHeight]="true" class="dashboard-card h-100">
+          <h3 class="card-section-heading">
             <i class="fas fa-triangle-exclamation me-2"></i>Risks
           </h3>
           @if (analysis()?.risks?.length) {
@@ -136,51 +136,69 @@
           } @else {
             <p class="text-muted small mb-0">No major risks detected.</p>
           }
-          <a [routerLink]="['/insights']" class="stretched-link mt-2 d-inline-block small">
+          <a [routerLink]="['/insights']" class="card-action-btn mt-auto">
             View details <i class="fas fa-arrow-right ms-1"></i>
           </a>
         </app-animated-card>
       </div>
     </div>
 
-    <!-- Start Here Section (highlighted) -->
+    <!-- Start Here Section - Expandable Tree View -->
     @if (folderSection(); as folder) {
-      <section class="dashboard-section start-here-section rounded-xl p-4 mb-4" [@fadeIn]>
-        <h2 class="start-here-title mb-3">
-          <i class="fas fa-star me-2 text-warning"></i>
+      <section class="dashboard-section start-here-section" [@fadeIn]>
+        <h2 class="start-here-title">
+          <i class="fas fa-star me-2 start-here-icon"></i>
           Start here
         </h2>
-        <h3 class="start-folder-heading mb-2">
-          <span class="start-folder-label">Folder structure</span>
+        <h3 class="start-folder-heading">
+          Folder structure
         </h3>
 
-        @if (folderRoots().length > 0) {
-          <div class="start-folder-pills mb-3" aria-label="Top-level folders">
-            @for (root of folderRoots(); track root) {
-              <span class="start-folder-pill">
-                <i class="fas fa-folder-open"></i>
-                <span class="start-folder-pill-label">{{ root }}</span>
-              </span>
-            }
-          </div>
+        @if (folderTreeText().trim()) {
+          <app-file-tree [treeText]="folderTreeText()" class="start-here-tree" />
+        } @else {
+          <p class="start-here-empty">No folder structure available.</p>
         }
-
-        <pre class="start-folder-tree mb-0" aria-label="Folder structure tree">
-{{ folderTreeText() }}
-        </pre>
       </section>
     }
 
-    @if (explain()?.summary) {
-      <app-animated-card padding="md" [hoverable]="false" [@fadeIn] class="summary-card">
-        <div class="summary-header d-flex align-items-center gap-2 mb-2">
-          <span class="summary-badge">
-            <i class="fas fa-sparkles"></i>
-          </span>
-          <h3 class="h6 text-uppercase text-secondary mb-0">Summary</h3>
+    <!-- Summary Section - Structured Cards -->
+    @if (summarySections().length > 0) {
+      <section class="dashboard-section summary-section" [@fadeIn]>
+        <h2 class="summary-section-title">
+          <i class="fas fa-sparkles me-2 summary-section-icon"></i>
+          Summary
+        </h2>
+        <div class="summary-cards-grid">
+          @for (section of summarySections(); track section.title) {
+            <div class="summary-card-block">
+              <h3 class="summary-card-heading">{{ section.title }}</h3>
+              @switch (section.type) {
+                @case ('overview') {
+                  <div class="summary-overview-list">
+                    @for (item of section.items; track item.label) {
+                      <div class="summary-overview-row">
+                        <span class="summary-overview-label">{{ item.label }}</span>
+                        <span class="summary-overview-value">{{ item.value }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+                @case ('bullets') {
+                  <ul class="summary-bullet-list">
+                    @for (bullet of section.bullets; track bullet) {
+                      <li class="summary-bullet-item">{{ bullet }}</li>
+                    }
+                  </ul>
+                }
+                @case ('paragraph') {
+                  <p class="summary-paragraph">{{ section.content }}</p>
+                }
+              }
+            </div>
+          }
         </div>
-        <p class="summary-text mb-0 text-secondary">{{ explain()!.summary }}</p>
-      </app-animated-card>
+      </section>
     }
   }
 </div>

@@ -1,5 +1,8 @@
 <div class="components-page">
-  <h1 class="components-title">Components</h1>
+  <div class="components-page-header">
+    <h1 class="components-title">Components</h1>
+    <p class="components-subtitle">Explore core components, architecture, and module distribution.</p>
+  </div>
 
   @if (!hasData()) {
     <app-empty-state
@@ -10,12 +13,14 @@
       actionRoute="/upload"
     />
   } @else {
-    <section class="mb-4" [@fadeInUp]>
+    <!-- Core components (existing) -->
+    <section class="components-section components-section--spaced" [@fadeInUp]>
       <app-animated-card padding="lg" [hoverable]="true">
-        <h2 class="section-heading mb-3">
-          <i class="fas fa-cubes text-accent"></i>
+        <h2 class="section-heading section-heading--large">
+          <i class="fas fa-cubes section-heading-icon"></i>
           Core components
         </h2>
+        <p class="section-subtitle">Key modules and components detected in the codebase.</p>
         @if (coreComponents().length > 0) {
           <div class="component-grid">
             @for (c of coreComponents(); track c) {
@@ -30,19 +35,92 @@
             }
           </div>
         } @else {
-          <p class="text-secondary small mb-0">No components detected.</p>
+          <p class="components-empty-text">No components detected.</p>
         }
       </app-animated-card>
     </section>
 
+    <!-- NEW: System Architecture Overview -->
+    <section class="components-section" [@fadeInUp]>
+      <div class="architecture-card components-card">
+        <h2 class="section-heading section-heading--large">
+          <i class="fas fa-sitemap section-heading-icon"></i>
+          System Architecture Overview
+        </h2>
+        <p class="section-subtitle">Request flow through the application layers.</p>
+        <div class="architecture-flow">
+          <div class="architecture-node">
+            <i class="fas fa-desktop architecture-node-icon"></i>
+            <span class="architecture-node-label">Client</span>
+          </div>
+          <div class="architecture-arrow" aria-hidden="true">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+          <div class="architecture-node">
+            <i class="fas fa-route architecture-node-icon"></i>
+            <span class="architecture-node-label">Routes</span>
+          </div>
+          <div class="architecture-arrow" aria-hidden="true">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+          <div class="architecture-node">
+            <i class="fas fa-code architecture-node-icon"></i>
+            <span class="architecture-node-label">Controllers</span>
+          </div>
+          <div class="architecture-arrow" aria-hidden="true">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+          <div class="architecture-node">
+            <i class="fas fa-database architecture-node-icon"></i>
+            <span class="architecture-node-label">Models</span>
+          </div>
+          <div class="architecture-arrow" aria-hidden="true">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+          <div class="architecture-node">
+            <i class="fas fa-database architecture-node-icon"></i>
+            <span class="architecture-node-label">Database</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW: Component Distribution Chart -->
+    @if (componentDistribution().length > 0) {
+      <section class="components-section" [@fadeInUp]>
+        <div class="distribution-card components-card">
+          <h2 class="section-heading section-heading--large">
+            <i class="fas fa-chart-bar section-heading-icon"></i>
+            Component Distribution
+          </h2>
+          <p class="section-subtitle">Count of routes, controllers, services, and models.</p>
+          <div class="distribution-chart">
+            @for (item of componentDistribution(); track item.label) {
+              <div class="distribution-row">
+                <span class="distribution-label">{{ item.label }}</span>
+                <div class="distribution-bar-wrap">
+                  <div
+                    class="distribution-bar"
+                    [style.width.%]="(item.count / maxChartValue()) * 100"
+                  ></div>
+                  <span class="distribution-count">{{ item.count }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- Interactive trace (existing) -->
     @if (routeTraces().length > 0) {
-      <section class="route-traces-section" [@fadeInUp]>
+      <section class="components-section route-traces-section" [@fadeInUp]>
         <app-animated-card padding="lg" [hoverable]="true">
-          <h2 class="section-heading mb-3">
-            <i class="fas fa-route text-accent"></i>
+          <h2 class="section-heading section-heading--large">
+            <i class="fas fa-route section-heading-icon"></i>
             Interactive trace
           </h2>
-          <p class="text-secondary small mb-3">Click a route to see controller, service, and model.</p>
+          <p class="section-subtitle">Click a route to see controller, service, and model.</p>
           <ul class="trace-route-list list-unstyled mb-0">
             @for (trace of routeTraces(); track trace.route) {
               <li class="trace-route-item">

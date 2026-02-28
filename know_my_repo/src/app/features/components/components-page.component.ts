@@ -28,6 +28,32 @@ export class ComponentsPageComponent {
   readonly routeTraces = computed(() => this.state.analysis()?.routeTraces ?? []);
   readonly expandedRoute = signal<string | null>(null);
 
+  /** Component distribution for chart: Routes, Controllers, Services, Models */
+  readonly componentDistribution = computed(() => {
+    const a = this.state.analysis();
+    if (!a) return [];
+
+    const layers = a.layers ?? [];
+    const routesCount = a.routeTraces?.length ?? a.workflows?.length ?? 0;
+    const controllersCount = layers.find((l) => l.name === 'Controllers')?.components?.length ?? 0;
+    const servicesCount = layers.find((l) => l.name === 'Services')?.components?.length ?? 0;
+    const modelsCount = layers.find((l) => l.name === 'Models')?.components?.length ?? 0;
+
+    const items: { label: string; count: number }[] = [];
+    if (routesCount > 0) items.push({ label: 'Routes', count: routesCount });
+    if (controllersCount > 0) items.push({ label: 'Controllers', count: controllersCount });
+    if (servicesCount > 0) items.push({ label: 'Services', count: servicesCount });
+    if (modelsCount > 0) items.push({ label: 'Models', count: modelsCount });
+
+    return items;
+  });
+
+  readonly maxChartValue = computed(() => {
+    const dist = this.componentDistribution();
+    if (dist.length === 0) return 1;
+    return Math.max(...dist.map((d) => d.count), 1);
+  });
+
   toggleTrace(trace: RouteTrace): void {
     this.expandedRoute.update((current) => (current === trace.route ? null : trace.route));
   }

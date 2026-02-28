@@ -11,4 +11,5 @@ import { CommonModule } from '@angular/common';
 export class AnimatedCardComponent {
   readonly padding = input<'none' | 'sm' | 'md' | 'lg'>('md');
   readonly hoverable = input<boolean>(true);
+  readonly fillHeight = input<boolean>(false);
 }

@@ -1,0 +1,53 @@
+@if (nodes().length > 0) {
+  <div class="file-tree" role="tree" aria-label="Folder structure">
+    @for (node of nodes(); track node.fullPath) {
+      <ng-container *ngTemplateOutlet="nodeTpl; context: { $implicit: node }" />
+    }
+  </div>
+} @else if ((treeText() || '').trim()) {
+  <pre class="file-tree-fallback" aria-label="Folder structure">{{ treeText() }}</pre>
+}
+
+<ng-template #nodeTpl let-node>
+  <div
+    class="tree-node"
+    [class.tree-node--folder]="node.isFolder"
+    [class.tree-node--file]="!node.isFolder"
+    [style.padding-left.rem]="0.5 + node.depth * 1.25"
+    role="treeitem"
+    [attr.aria-expanded]="node.isFolder ? isExpanded(node) : null"
+    (click)="node.isFolder && toggleExpand(node)"
+  >
+    @if (node.isFolder) {
+      <span class="tree-node-toggle" aria-hidden="true">
+        <i
+          class="fas fa-chevron-right tree-node-chevron"
+          [class.tree-node-chevron--expanded]="isExpanded(node)"
+        ></i>
+      </span>
+      <i class="fas fa-folder tree-node-icon tree-node-icon--folder" aria-hidden="true"></i>
+    } @else {
+      <span class="tree-node-spacer" aria-hidden="true"></span>
+      <i
+        class="fas tree-node-icon tree-node-icon--file"
+        [ngClass]="getFileIcon(node.name)"
+        aria-hidden="true"
+      ></i>
+    }
+    <span class="tree-node-name">{{ node.name }}</span>
+  </div>
+
+  @if (node.isFolder && node.children.length > 0) {
+    @if (isExpanded(node)) {
+      <div
+        class="tree-children"
+        [@expandCollapse]
+        role="group"
+      >
+        @for (child of node.children; track child.fullPath) {
+          <ng-container *ngTemplateOutlet="nodeTpl; context: { $implicit: child }" />
+        }
+      </div>
+    }
+  }
+</ng-template>
